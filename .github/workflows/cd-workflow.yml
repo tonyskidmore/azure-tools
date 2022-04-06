@@ -40,7 +40,14 @@ jobs:
 
         # TODO: simple test - need expanding
       - name: Verify tools are accessible in the built image.
-        run: docker exec --tty test-container env TERM=xterm terraform version
+        run: |
+          set -e
+          docker exec --tty test-container env TERM=xterm terraform version
+          docker exec --tty test-container env TERM=xterm packer version
+          docker exec --tty test-container env TERM=xterm az version
+          docker exec --tty test-container env TERM=xterm git version
+          docker exec --tty test-container env TERM=xterm pwsh -version
+
 
   Build-and-Push-Docker-Image:
     runs-on: ubuntu-latest
