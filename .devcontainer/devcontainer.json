@@ -1,0 +1,4 @@
+// https://code.visualstudio.com/docs/remote/devcontainerjson-reference
+{
+  "image": "ghcr.io/tonyskidmore/azure-tools:latest"
+}
