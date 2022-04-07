@@ -1,4 +1,11 @@
 // https://code.visualstudio.com/docs/remote/devcontainerjson-reference
 {
-  "image": "ghcr.io/tonyskidmore/azure-tools:latest"
+  "context": "..",
+  "dockerFile": "../Dockerfile",
+  "extensions": [
+    "ms-vscode.azure-account",
+    "ms-azuretools.vscode-azureterraform",
+    "hashicorp.terraform",
+    "ms-azure-devops.azure-pipelines"
+  ]
 }

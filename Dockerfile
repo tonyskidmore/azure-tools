@@ -34,8 +34,8 @@ COPY --from=builder ["/usr/bin/terraform", "/usr/bin/terraform"]
 COPY --from=builder ["/usr/bin/packer", "/usr/bin/packer"]
 
 # Copy terraform modules
-RUN mkdir modules
-COPY modules modules
+RUN mkdir terraform/modules
+COPY terraform/modules terraform/modules
 
 RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes
 
