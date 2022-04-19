@@ -19,10 +19,6 @@ tfplan.json
 # Crash log files
 crash.log
 
-# virtual-environment content
-packer-log.txt
-virtual-environments/
-
 # ansible ssh connect files
 ansible_ssh.cmd
 win_vm.rdp

@@ -1,7 +1,7 @@
-# docker build --build-arg TERRAFORM_VERSION="1.1.7" --build-arg PACKER_VERSION="1.8.0" -t azure-tools .
+# docker build --build-arg TERRAFORM_VERSION="1.1.8" --build-arg PACKER_VERSION="1.8.0" -t azure-tools .
 ARG IMAGE_REPO=mcr.microsoft.com/azure-powershell
 ARG IMAGE_VERSION=ubuntu-20.04
-ARG TERRAFORM_VERSION=1.1.7
+ARG TERRAFORM_VERSION=1.1.8
 ARG PACKER_VERSION=1.8.0
 ARG AZURE_CLI_VERSION=2.35.0
 
