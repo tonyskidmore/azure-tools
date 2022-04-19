@@ -33,7 +33,7 @@ jobs:
           exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
+          severity: 'CRITICAL' #,HIGH
 
       - name: Run the built image.
         run: docker run --name test-container --entrypoint "/bin/sleep" -d --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro azure-tools 60
