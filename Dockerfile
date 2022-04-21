@@ -4,8 +4,7 @@ ARG IMAGE_VERSION=ubuntu-20.04
 ARG TERRAFORM_VERSION=1.1.8
 ARG PACKER_VERSION=1.8.0
 ARG AZURE_CLI_VERSION=2.35.0
-ARG USERNAME=azureuser
-ARG USER_UID=1000
+
 
 FROM ${IMAGE_REPO}:${IMAGE_VERSION} AS builder
 ARG TERRAFORM_VERSION
@@ -30,6 +29,8 @@ RUN wget --quiet https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_
 
 FROM ${IMAGE_REPO}:${IMAGE_VERSION}
 ARG AZURE_CLI_VERSION
+ARG USERNAME=azureuser
+ARG USER_UID=1000
 
 # Copy files from builder
 COPY --from=builder ["/usr/bin/terraform", "/usr/bin/terraform"]
@@ -53,6 +54,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
     tree \
     sudo \
+    vim \
     sshpass \
     python3-pip \
     python3.8 \
@@ -66,13 +68,13 @@ RUN pip --no-cache-dir install --upgrade pip && \
     pip --no-cache-dir install azure-cli==${AZURE_CLI_VERSION}
 
 RUN useradd --uid "$USER_UID" -m "$USERNAME" && \
-    echo "${USERNAME} ALL=\(root\) NOPASSWD:ALL" > /etc/sudoers.d/${USERNAME} && \
-    chmod 0440 "/etc/sudoers.d/${USERNAME}"
+    echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" > "/etc/sudoers.d/${USERNAME}" && \
+    chmod 0440 "/etc/sudoers.d/${USERNAME}""
 
 # Clean up
 RUN apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 
-USER "$USERNAME"
+USER $USERNAME
 WORKDIR /home/$USERNAME
