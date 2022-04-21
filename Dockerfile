@@ -4,6 +4,8 @@ ARG IMAGE_VERSION=ubuntu-20.04
 ARG TERRAFORM_VERSION=1.1.8
 ARG PACKER_VERSION=1.8.0
 ARG AZURE_CLI_VERSION=2.35.0
+ARG USERNAME=azureuser
+ARG USER_UID=1000
 
 FROM ${IMAGE_REPO}:${IMAGE_VERSION} AS builder
 ARG TERRAFORM_VERSION
@@ -62,7 +64,13 @@ RUN pip --no-cache-dir install --upgrade pip && \
     pip --no-cache-dir install wheel && \
     pip --no-cache-dir install azure-cli==${AZURE_CLI_VERSION}
 
+RUN useradd --uid "$USER_UID" -m "$USERNAME" && \
+    echo ${USERNAME} ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/${USERNAME} && \
+    chmod 0440 /etc/sudoers.d/${USERNAME}
+
 # Clean up
 RUN apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
+
+USER "$USERNAME"
