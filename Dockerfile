@@ -69,7 +69,7 @@ RUN pip --no-cache-dir install --upgrade pip && \
 
 RUN useradd --uid "$USER_UID" -m "$USERNAME" && \
     echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" > "/etc/sudoers.d/${USERNAME}" && \
-    chmod 0440 "/etc/sudoers.d/${USERNAME}""
+    chmod 0440 "/etc/sudoers.d/${USERNAME}"
 
 # Clean up
 RUN apt-get autoremove -y \
