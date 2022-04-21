@@ -52,6 +52,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     unzip \
     wget \
     tree \
+    sudo \
     sshpass \
     python3-pip \
     python3.8 \
@@ -65,8 +66,8 @@ RUN pip --no-cache-dir install --upgrade pip && \
     pip --no-cache-dir install azure-cli==${AZURE_CLI_VERSION}
 
 RUN useradd --uid "$USER_UID" -m "$USERNAME" && \
-    echo ${USERNAME} ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/${USERNAME} && \
-    chmod 0440 /etc/sudoers.d/${USERNAME}
+    echo "${USERNAME} ALL=\(root\) NOPASSWD:ALL" > /etc/sudoers.d/${USERNAME} && \
+    chmod 0440 "/etc/sudoers.d/${USERNAME}"
 
 # Clean up
 RUN apt-get autoremove -y \
@@ -74,3 +75,4 @@ RUN apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
 
 USER "$USERNAME"
+WORKDIR /home/$USERNAME
