@@ -66,10 +66,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN pip --no-cache-dir install --upgrade pip && \
     pip --no-cache-dir install wheel && \
     pip --no-cache-dir install azure-cli==${AZURE_CLI_VERSION} && \
-    az config set extension.use_dynamic_install=yes_without_prompt
-
-# Install Azure CLI devops extension
-RUN az extension add --name azure-devops
+    az extension add --name azure-devops --system
 
 RUN useradd --uid "$USER_UID" -m "$USERNAME" && \
     echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" > "/etc/sudoers.d/${USERNAME}" && \
