@@ -65,7 +65,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install Azure CLI
 RUN pip --no-cache-dir install --upgrade pip && \
     pip --no-cache-dir install wheel && \
-    pip --no-cache-dir install azure-cli==${AZURE_CLI_VERSION}
+    pip --no-cache-dir install azure-cli==${AZURE_CLI_VERSION} && \
+    az extension add --name azure-devops
 
 RUN useradd --uid "$USER_UID" -m "$USERNAME" && \
     echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" > "/etc/sudoers.d/${USERNAME}" && \
