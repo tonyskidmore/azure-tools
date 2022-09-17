@@ -35,6 +35,7 @@ ARG USER_UID=1000
 # Copy files from builder
 COPY --from=builder ["/usr/bin/terraform", "/usr/bin/terraform"]
 COPY --from=builder ["/usr/bin/packer", "/usr/bin/packer"]
+COPY --from=builder ["/root/.local/share/powershell/Modules", "/home/${USERNAME}/.local/share/powershell/Modules"]
 
 RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes
 
@@ -70,7 +71,8 @@ RUN pip --no-cache-dir install --upgrade pip && \
 
 RUN useradd --uid "$USER_UID" -m "$USERNAME" && \
     echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" > "/etc/sudoers.d/${USERNAME}" && \
-    chmod 0440 "/etc/sudoers.d/${USERNAME}"
+    chmod 0440 "/etc/sudoers.d/${USERNAME}" && \
+    chown -R "${USERNAME}:${USERNAME}" "/home/${USERNAME}/.local"
 
 # Clean up
 RUN apt-get autoremove -y \
