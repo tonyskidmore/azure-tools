@@ -42,11 +42,12 @@ jobs:
       - name: Verify tools are accessible in the built image.
         run: |
           set -e
-          docker exec --tty test-container env TERM=xterm terraform version
-          docker exec --tty test-container env TERM=xterm packer version
-          docker exec --tty test-container env TERM=xterm az version
-          docker exec --tty test-container env TERM=xterm git version
-          docker exec --tty test-container env TERM=xterm pwsh -version
+          docker exec --tty test-container env TERM=xterm terraform version || echo "Error occurred checking Terraform"
+          docker exec --tty test-container env TERM=xterm packer version  || echo "Error occurred checking Packer"
+          docker exec --tty test-container env TERM=xterm az version  || echo "Error occurred checking Azure CLI"
+          docker exec --tty test-container env TERM=xterm git version  || echo "Error occurred checking git"
+          docker exec --tty test-container env TERM=xterm pwsh -version  || echo "Error occurred checking PowerShell version"
+          docker exec --tty test-container env TERM=xterm pwsh -c "Get-Module -ListAvailable"  || echo "Error occurred checking PowerShell modules"
 
 
   Build-and-Push-Docker-Image:
