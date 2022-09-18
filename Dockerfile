@@ -35,7 +35,7 @@ ARG USER_UID=1000
 # Copy files from builder
 COPY --from=builder ["/usr/bin/terraform", "/usr/bin/terraform"]
 COPY --from=builder ["/usr/bin/packer", "/usr/bin/packer"]
-COPY --from=builder ["/root/.local/share/powershell/Modules", "/home/${USERNAME}/.local/share/powershell/Modules"]
+COPY --from=builder ["/root/.local/share/powershell/Modules", "/opt/microsoft/powershell/7/Modules"]
 
 RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes
 
@@ -74,12 +74,9 @@ RUN curl -sL https://packages.microsoft.com/keys/microsoft.asc | \
 RUN AZ_REPO=$(lsb_release -cs) && \
     echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | \
     tee /etc/apt/sources.list.d/azure-cli.list && \
-    apt-get update
-
-# RUN apt-cache policy azure-cli
-RUN apt-get install -y "azure-cli=${AZURE_CLI_VERSION}-1~focal" && \
-    az extension add --name azure-devops
-
+    apt-get update && \
+    apt-get install -y "azure-cli=${AZURE_CLI_VERSION}-1~focal" && \
+    az extension add --name azure-devops --system
 
 RUN useradd --uid "$USER_UID" -ms /bin/bash "$USERNAME" && \
     echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" > "/etc/sudoers.d/${USERNAME}" && \
@@ -94,5 +91,3 @@ RUN apt-get autoremove -y \
 USER $USERNAME
 WORKDIR /home/$USERNAME
 
-# Install Azure CLI user level
-RUN az extension add --name azure-devops
