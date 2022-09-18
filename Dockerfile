@@ -42,6 +42,9 @@ RUN echo "APT::Get::Assume-Yes \"true\";" > /etc/apt/apt.conf.d/90assumeyes
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     curl \
+    apt-transport-https \
+    lsb-release \
+    gnupg \
     jq \
     git \
     iputils-ping \
@@ -64,15 +67,24 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gnupg
 
 # Install Azure CLI system level
-RUN pip --no-cache-dir install --upgrade pip && \
-    pip --no-cache-dir install wheel && \
-    pip --no-cache-dir install azure-cli==${AZURE_CLI_VERSION} && \
-    az extension add --name azure-devops --system
+RUN curl -sL https://packages.microsoft.com/keys/microsoft.asc | \
+    gpg --dearmor | \
+    tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
 
-RUN useradd --uid "$USER_UID" -m "$USERNAME" && \
+RUN AZ_REPO=$(lsb_release -cs) && \
+    echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | \
+    tee /etc/apt/sources.list.d/azure-cli.list && \
+    apt-get update
+
+# RUN apt-cache policy azure-cli
+RUN apt-get install -y "azure-cli=${AZURE_CLI_VERSION}-1~focal" && \
+    az extension add --name azure-devops
+
+
+RUN useradd --uid "$USER_UID" -ms /bin/bash "$USERNAME" && \
     echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" > "/etc/sudoers.d/${USERNAME}" && \
     chmod 0440 "/etc/sudoers.d/${USERNAME}" && \
-    chown -R "${USERNAME}:${USERNAME}" "/home/${USERNAME}/.local"
+    chown -R "${USERNAME}:${USERNAME}" "/home/${USERNAME}"
 
 # Clean up
 RUN apt-get autoremove -y \
@@ -83,5 +95,4 @@ USER $USERNAME
 WORKDIR /home/$USERNAME
 
 # Install Azure CLI user level
-RUN pip --no-cache-dir install --ignore-installed --user azure-cli==${AZURE_CLI_VERSION} && \
-    az extension add --name azure-devops
+RUN az extension add --name azure-devops
