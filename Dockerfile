@@ -84,4 +84,4 @@ WORKDIR /home/$USERNAME
 
 # Install Azure CLI user level
 RUN pip --no-cache-dir install --user azure-cli==${AZURE_CLI_VERSION} && \
-    az extension add --name azure-devops --system
+    az extension add --name azure-devops
