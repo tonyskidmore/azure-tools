@@ -63,7 +63,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     lsb-release \
     gnupg
 
-# Install Azure CLI
+# Install Azure CLI system level
 RUN pip --no-cache-dir install --upgrade pip && \
     pip --no-cache-dir install wheel && \
     pip --no-cache-dir install azure-cli==${AZURE_CLI_VERSION} && \
@@ -81,3 +81,7 @@ RUN apt-get autoremove -y \
 
 USER $USERNAME
 WORKDIR /home/$USERNAME
+
+# Install Azure CLI user level
+RUN pip --no-cache-dir --user install azure-cli==${AZURE_CLI_VERSION} && \
+    az extension add --name azure-devops --system
