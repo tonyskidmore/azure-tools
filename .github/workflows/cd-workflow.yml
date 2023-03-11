@@ -27,13 +27,15 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'azure-tools'
-          format: 'table'
-          # uncomment to fail on found issues with defined severity
+          # https://github.com/marketplace/actions/aqua-security-trivy
           exit-code: '1'
+          format: 'table'
           ignore-unfixed: true
+          image-ref: 'azure-tools'
+          scanners: vuln
+          severity: 'HIGH, CRITICAL' #,HIGH
+          timeout: '10m0s'
           vuln-type: 'os,library'
-          severity: 'CRITICAL' #,HIGH
 
       - name: Run the built image.
         run: docker run --name test-container --entrypoint "/bin/sleep" -d --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro azure-tools 60
