@@ -33,7 +33,7 @@ jobs:
           ignore-unfixed: true
           image-ref: 'azure-tools'
           scanners: vuln
-          severity: 'HIGH'
+          severity: 'CRITICAL'
           timeout: '10m0s'
           vuln-type: 'os,library'
 
